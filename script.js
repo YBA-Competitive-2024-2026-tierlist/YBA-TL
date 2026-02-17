@@ -1,7 +1,7 @@
 // CONFIGURATION DES RANGS
 const rankConfig = {
     // GOATS : Label BLANC/NOIR, Fond du row NOIR (géré par CSS), Texte RAINBOW (type glitch)
-    GOATS: { label: "GOATS: Greatest Players of the 2024 - 2026 Era.", color: "#000000", bg: "#ffffff", desc: "The legends.", type: "glitch", btnColor: "#ffffff" },
+    GOATS: { label: "GOATS: Greatest Players of the 2024 - 2026 Era.", color: "#000000", bg: "#ffffff", desc: "Greatest Players of the 2024 - 2026 Era.", type: "glitch", btnColor: "#ffffff" },
     // SSS : Transparent + Shading (géré par CSS), Texte Rainbow
     SSS: { label: "SSS: Finest Talent Of Our Time.", color: "#fff", bg: "transparent", desc: "The strongest force.", type: "god", btnColor: "#ff0055" },
     
@@ -173,4 +173,5 @@ function App() {
         </div>
     );
 }
+
 ReactDOM.render(<App />, document.getElementById('root'));
