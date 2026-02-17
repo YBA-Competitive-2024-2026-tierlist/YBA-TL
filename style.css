@@ -31,38 +31,80 @@ body {
 /* Hero Section */
 .hero-section { padding: 40px 0 20px; text-align: center; animation: fadeIn 1.5s ease-out; }
 .hero-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255,255,255,0.2); margin-bottom: 5px; }
-.hero-subtitle { font-size: 1.1rem; letter-spacing: 4px; color: #00f3ff; text-transform: uppercase; margin-bottom: 30px; }
 
 /* Profil Header */
 .profile-header {
-    background: linear-gradient(135deg, #1a1a2e, #300030); padding: 40px 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.1); position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #1a1a2e, #300030); padding: 40px 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
 }
-.profile-content { position: relative; z-index: 1; }
-.profile-image-container { position: relative; display: inline-block; margin: 0 15px 20px; }
+.profile-image-container { position: relative; display: inline-block; margin: 0 15px 20px; text-align: center; }
 .profile-img { width: 100px; height: 100px; border-radius: 20px; border: 2px solid #00f3ff; box-shadow: 0 0 15px #00f3ff; object-fit: cover; }
 .profile-image-container p { margin-top: 10px; font-weight: bold; letter-spacing: 2px; font-family: 'Orbitron'; }
-.profile-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; text-shadow: 0 0 10px #00f3ff; }
-.disclaimer-box { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 800px; margin: 0 auto; text-align: left; font-size: 0.9rem; }
-.disclaimer-box strong { color: #ff0055; }
+.profile-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; text-align: center; }
 
-/* Controls */
-.controls-area { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: center; margin-bottom: 30px; }
-.search-wrapper { flex-grow: 1; min-width: 250px; max-width: 400px; }
-.custom-search { background: rgba(255, 255, 255, 0.05); border: 1px solid #333; color: white; padding: 12px 20px; border-radius: 50px; width: 100%; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; transition: 0.3s; backdrop-filter: blur(5px); }
-.custom-search:focus { outline: none; border-color: #00f3ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); background: rgba(0, 0, 0, 0.8); }
-.filter-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.filter-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid #444; color: #888; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-weight: 700; transition: all 0.3s ease; text-transform: uppercase; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
-.filter-btn:hover { background: rgba(255, 255, 255, 0.1); color: white; transform: translateY(-2px); }
-.filter-btn.active-all { background: white; color: black; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.4); }
-.filter-btn.active { color: white; text-shadow: 0 0 5px rgba(0,0,0,0.8); box-shadow: 0 0 10px currentColor; border-color: currentColor; background: rgba(255,255,255,0.1); }
+/* Tier Rows Base */
+.tier-row { 
+    background: rgba(255,255,255,0.02); 
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255,255,255,0.05); 
+    border-radius: 12px; 
+    margin-bottom: 0; 
+    display: flex; 
+    align-items: stretch; 
+    animation: slideUp 0.8s ease-out forwards; 
+    opacity: 0; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    position: relative;
+    z-index: 2; 
+}
 
-/* Tier Rows */
-.tier-row { background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; margin-bottom: 12px; display: flex; align-items: stretch; animation: slideUp 0.8s ease-out forwards; opacity: 0; }
-.tier-label { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; width: 260px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; text-align: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); padding: 15px; line-height: 1.4; box-sizing: border-box; }
-.tier-content { padding: 12px; flex-grow: 1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; align-content: center; border-left: 1px solid rgba(255,255,255,0.05); }
-.tier-separator { font-size: 1.5rem; color: rgba(255, 255, 255, 0.3); font-weight: 900; padding: 0 10px; cursor: default; user-select: none; }
+/* === SYSTEME DE FADE (L'ombre entre les rangs) === */
+.tier-fade {
+    height: 50px; 
+    width: 98%; 
+    margin: -15px auto; 
+    opacity: 0.8; 
+    position: relative;
+    z-index: 1; 
+    pointer-events: none;
+    border-radius: 0 0 12px 12px;
+}
 
-/* --- PLAYER CARD (BASE) --- */
+/* === STYLE SPÉCIFIQUE GOATS (REMISE DU SHADE) === */
+.tier-row-GOATS {
+    /* Le dégradé complexe pour l'effet de profondeur "shade" */
+    background: linear-gradient(110deg, #ffffff 0%, #d0d0d0 15%, #0a0a0a 40%, #000000 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    /* Ombre interne pour la profondeur */
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+/* Le label devient transparent pour montrer le dégradé du row */
+.tier-row-GOATS .tier-label {
+    background-color: transparent !important;
+    color: #000000 !important; /* Texte noir sur la partie blanche */
+    text-shadow: 0 1px 2px rgba(255,255,255,0.4) !important;
+}
+
+/* === STYLE SPÉCIFIQUE SSS (Transparent + Shading) === */
+.tier-row-SSS {
+    background: rgba(0, 0, 0, 0.3) !important;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.07) 0%, transparent 20%, transparent 80%, rgba(255,255,255,0.07) 100%) !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(15px) !important;
+}
+
+.tier-label { 
+    font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.85rem; 
+    text-transform: uppercase; width: 260px; flex-shrink: 0; 
+    display: flex; align-items: center; justify-content: center; text-align: center; 
+    padding: 15px; line-height: 1.4; box-sizing: border-box; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.tier-content { padding: 12px; flex-grow: 1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-left: 1px solid rgba(255,255,255,0.05); }
+.tier-separator { font-size: 1.5rem; color: rgba(255, 255, 255, 0.3); font-weight: 900; padding: 0 10px; }
+
+/* --- PLAYER CARD BASE --- */
 .player-card {
     position: relative;
     padding: 10px 20px;
@@ -70,69 +112,68 @@ body {
     font-weight: 800;
     cursor: pointer;
     font-size: 1rem;
-    transition: transform 0.1s ease, background-color 0.2s ease;
+    transition: transform 0.1s ease;
     border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.6);
     overflow: hidden; 
     z-index: 1;
 }
 
-.player-card span {
-    position: relative;
-    z-index: 5;
-    pointer-events: none;
-    transition: color 0.2s ease;
-}
+.player-card span { position: relative; z-index: 5; pointer-events: none; transition: color 0.2s ease, text-shadow 0.2s ease; }
+.haki-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
 
-.haki-canvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%; 
-    pointer-events: none;
-    z-index: 2;
-}
-
-/* --- GOD TIER (Rainbow) --- */
-.god-tier {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.god-tier:hover { transform: scale(1.1); border-color: white; }
-
-.god-tier span {
-    background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent; 
-    animation: rainbowTextMove 4s linear infinite;
-    display: inline-block;
-    text-shadow: none;
-}
-
+/* --- EFFECT: RAINBOW TEXT ANIMATION (Shared) --- */
 @keyframes rainbowTextMove { to { background-position: -300% center; } }
 
-/* --- ELECTRIC TIERS (HAKI) --- */
-.electric-tier {
-    color: var(--text-color, #fff);
-    background-color: #000;
+/* --- GLITCH EFFECT (GOATS) --- */
+@keyframes glitch-skew {
+    0% { transform: skew(0deg); } 20% { transform: skew(-2deg); } 40% { transform: skew(2deg); }
+    60% { transform: skew(-1deg); } 80% { transform: skew(3deg); } 100% { transform: skew(0deg); }
 }
 
-.electric-tier:hover {
-    background-color: #080808;
-    z-index: 100;
+/* GOD TIER (SSS) - Rainbow Text Permanent */
+.god-tier span {
+    background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; 
+    animation: rainbowTextMove 4s linear infinite; display: inline-block;
 }
 
-/* Texte noir au survol pour la lisibilité sur Haki */
+/* GLITCH TIER (GOATS) - Rainbow Text Permanent + Glitch Hover */
+.glitch-tier {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(0,0,0,0.8);
+}
+.glitch-tier:hover {
+    animation: glitch-skew 0.2s infinite linear alternate-reverse;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+/* IMPORTANT : Le texte reste Rainbow TOUT LE TEMPS */
+.glitch-tier span {
+    background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; 
+    animation: rainbowTextMove 2s linear infinite;
+    display: inline-block;
+}
+/* Au survol, on ajoute juste le shadow glitch, on garde le rainbow */
+.glitch-tier:hover span {
+    text-shadow: 3px 0 rgba(255,0,0,0.8), -3px 0 rgba(0,0,255,0.8), 0 0 10px white;
+}
+
+/* ELECTRIC TIERS (HAKI) */
+.electric-tier { color: var(--text-color, #fff); background-color: #000; }
 .electric-tier:hover span {
-    color: #000000 !important;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    color: #000000 !important; 
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
     font-weight: 900;
 }
 
-/* Tooltip & Footer */
-.custom-tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: #fff; padding: 10px 15px; border-radius: 15px; border: 1px solid #00f3ff; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif; pointer-events: none; z-index: 9999; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); max-width: 300px; line-height: 1.4; }
-footer { margin-top: 60px; border-top: 1px solid #222; padding: 30px 0; background: #080808; }
-.credit-box { background: rgba(255,255,255,0.03); padding: 15px 25px; border-radius: 15px; border: 1px solid #333; display: inline-block; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* UI Controls */
+.custom-search { background: rgba(255, 255, 255, 0.05); border: 1px solid #333; color: white; padding: 12px 20px; border-radius: 50px; width: 100%; margin-bottom: 20px; }
+.filter-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid #444; color: #888; padding: 6px 14px; border-radius: 20px; cursor: pointer; margin: 2px; }
+.filter-btn.active { color: white; box-shadow: 0 0 10px currentColor; border-color: currentColor; }
+.disclaimer-box { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); margin: 20px auto; max-width: 900px; text-align: left; }
+.custom-tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: #fff; padding: 10px 15px; border-radius: 15px; border: 1px solid #00f3ff; z-index: 9999; pointer-events: none; max-width: 350px; line-height: 1.4; }
+
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
