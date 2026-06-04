@@ -56,7 +56,7 @@ const ProfileCard = ({ src, name, isShayraim = false }) => (
   </div>
 );
 
-/* ══ 5. SHAYRAIM AURA CANVAS ══ */
+/* ══ 5.  AURA CANVAS ══ */
 const ShayraimeAura = ({ active }) => {
   const ref = React.useRef(null);
   React.useEffect(() => {
@@ -760,8 +760,9 @@ function App() {
               <span className="creator-name">Web Designer</span>
             </div>
             <div className="creator">
-              <ProfileCard src="image/10xkk9s.jpg" name="Havoconslaught" />
+              <ProfileCard src="image/3b0df852d0aa8a5769ae0d3606beff83.webp" name="HavoxHavoc" />
               <span className="creator-name">HavoxHavoc</span>
+              <span className="creator-name">Ranker</span>
             </div>
           </div>
           <div className="header-divider" aria-hidden="true">
