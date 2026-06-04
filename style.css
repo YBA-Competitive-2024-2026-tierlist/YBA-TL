@@ -1,179 +1,1639 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+/* ════════════════════════════════════════════════════
+   YBA TIERLIST — STYLESHEET
+   Sections:
+     1. Custom properties & theming
+     2. Reset & base
+     3. Background & canvas
+     4. Intro cinematic
+     5. Theme toggle
+     6. Header & hero
+     7. Dokkan LR card — creator profiles
+     8. Controls (search + filters)
+     9. Tier rows
+    10. Tier label
+    11. Player cards
+    12. Rank-specific styles
+    13. Separator
+    14. Tooltip
+    15. Loading
+    16. Footer
+    17. Animations keyframes
+    18. Responsive
+    19. Scrollbar
+   ════════════════════════════════════════════════════ */
 
+
+/* ─────────────────────────────────────────────────────
+   1. CUSTOM PROPERTIES & THEMING
+───────────────────────────────────────────────────── */
 :root {
-    --bg-dark: #050505;
+  /* Dark mode (default) */
+  --bg:            #05040f;
+  --bg2:           #0e0c22;
+  --surface:       rgba(255,255,255,0.03);
+  --border:        rgba(255,255,255,0.07);
+  --text:          #e8e3f5;
+  --text-muted:    #6b6480;
+  --label-text:    #e8e3f5;
+
+  /* Rank accent colours */
+  --clr-goats:     #ffffff;
+  --clr-sss:       #ff3355;
+  --clr-ss:        #ff2020;
+  --clr-sp:        #ff8c00;
+  --clr-s:         #ffd600;
+  --clr-a:         #b44fff;
+  --clr-b:         #2299ff;
+  --clr-c:         #00d97e;
+
+  /* Scrollbar */
+  --sb-thumb:      rgba(255,0,60,0.35);
+
+  /* Transition speed */
+  --speed:         0.25s;
 }
+
+[data-theme="light"] {
+  --bg:            #f0eef8;
+  --bg2:           #e2dff2;
+  --surface:       rgba(0,0,0,0.04);
+  --border:        rgba(0,0,0,0.1);
+  --text:          #1a1628;
+  --text-muted:    #7a728e;
+  --label-text:    #ffffff;
+  --sb-thumb:      rgba(160,0,60,0.3);
+}
+
+
+/* ─────────────────────────────────────────────────────
+   2. RESET & BASE
+───────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
 
 body {
-    background-color: var(--bg-dark);
-    color: white;
-    font-family: 'Rajdhani', sans-serif;
-    overflow-x: hidden;
-    min-height: 100vh;
-    margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow Condensed', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background var(--speed), color var(--speed);
 }
 
-/* Background Animé */
-.bg-fixed {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-    background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%);
-}
-.bg-grid {
-    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: rotateGrid 120s linear infinite;
-    opacity: 0.4;
-}
-@keyframes rotateGrid { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 
-/* Hero Section */
-.hero-section { padding: 40px 0 20px; text-align: center; animation: fadeIn 1.5s ease-out; }
-.hero-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255,255,255,0.2); margin-bottom: 5px; }
-
-/* Profil Header */
-.profile-header {
-    background: linear-gradient(135deg, #1a1a2e, #300030); padding: 40px 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
-}
-.profile-image-container { position: relative; display: inline-block; margin: 0 15px 20px; text-align: center; }
-.profile-img { width: 100px; height: 100px; border-radius: 20px; border: 2px solid #00f3ff; box-shadow: 0 0 15px #00f3ff; object-fit: cover; }
-.profile-image-container p { margin-top: 10px; font-weight: bold; letter-spacing: 2px; font-family: 'Orbitron'; }
-.profile-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; text-align: center; }
-
-/* Tier Rows Base */
-.tier-row { 
-    background: rgba(255,255,255,0.02); 
-    backdrop-filter: blur(10px); 
-    border: 1px solid rgba(255,255,255,0.05); 
-    border-radius: 12px; 
-    margin-bottom: 0; 
-    display: flex; 
-    align-items: stretch; 
-    animation: slideUp 0.8s ease-out forwards; 
-    opacity: 0; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    position: relative;
-    z-index: 2; 
+/* ─────────────────────────────────────────────────────
+   3. BACKGROUND & CANVAS
+───────────────────────────────────────────────────── */
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-/* === SYSTEME DE FADE (L'ombre entre les rangs) === */
-.tier-fade {
-    height: 50px; 
-    width: 98%; 
-    margin: -15px auto; 
-    opacity: 0.8; 
-    position: relative;
-    z-index: 1; 
-    pointer-events: none;
-    border-radius: 0 0 12px 12px;
+#bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-/* === STYLE SPÉCIFIQUE GOATS (REMISE DU SHADE) === */
-.tier-row-GOATS {
-    /* Le dégradé complexe pour l'effet de profondeur "shade" */
-    background: linear-gradient(110deg, #ffffff 0%, #d0d0d0 15%, #0a0a0a 40%, #000000 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    /* Ombre interne pour la profondeur */
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 10px 30px rgba(0,0,0,0.5) !important;
-}
-/* Le label devient transparent pour montrer le dégradé du row */
-.tier-row-GOATS .tier-label {
-    background-color: transparent !important;
-    color: #000000 !important; /* Texte noir sur la partie blanche */
-    text-shadow: 0 1px 2px rgba(255,255,255,0.4) !important;
+.bg-grad {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, #150828 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 85%, #0a0120 0%, transparent 55%);
+  transition: opacity var(--speed);
 }
 
-/* === STYLE SPÉCIFIQUE SSS (Transparent + Shading) === */
-.tier-row-SSS {
-    background: rgba(0, 0, 0, 0.3) !important;
-    background-image: linear-gradient(to bottom, rgba(255,255,255,0.07) 0%, transparent 20%, transparent 80%, rgba(255,255,255,0.07) 100%) !important;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(15px) !important;
+[data-theme="light"] .bg-grad {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -5%, rgba(180,130,255,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 85%, rgba(100,80,200,0.12) 0%, transparent 55%);
 }
 
-.tier-label { 
-    font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.85rem; 
-    text-transform: uppercase; width: 260px; flex-shrink: 0; 
-    display: flex; align-items: center; justify-content: center; text-align: center; 
-    padding: 15px; line-height: 1.4; box-sizing: border-box; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+
+/* ─────────────────────────────────────────────────────
+   4. INTRO CINEMATIC
+───────────────────────────────────────────────────── */
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  pointer-events: none;
 }
 
-.tier-content { padding: 12px; flex-grow: 1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-left: 1px solid rgba(255,255,255,0.05); }
-.tier-separator { font-size: 1.5rem; color: rgba(255, 255, 255, 0.3); font-weight: 900; padding: 0 10px; }
-
-/* --- PLAYER CARD BASE --- */
-.player-card {
-    position: relative;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: 800;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: transform 0.1s ease;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(0,0,0,0.6);
-    overflow: hidden; 
-    z-index: 1;
+#intro.done {
+  animation: introFade 0.7s 2.3s ease forwards;
 }
 
-.player-card span { position: relative; z-index: 5; pointer-events: none; transition: color 0.2s ease, text-shadow 0.2s ease; }
-.haki-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
-
-/* --- EFFECT: RAINBOW TEXT ANIMATION (Shared) --- */
-@keyframes rainbowTextMove { to { background-position: -300% center; } }
-
-/* --- GLITCH EFFECT (GOATS) --- */
-@keyframes glitch-skew {
-    0% { transform: skew(0deg); } 20% { transform: skew(-2deg); } 40% { transform: skew(2deg); }
-    60% { transform: skew(-1deg); } 80% { transform: skew(3deg); } 100% { transform: skew(0deg); }
+.intro-line {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem, 3vw, 1.7rem);
+  letter-spacing: 10px;
+  color: #fff;
+  opacity: 0;
+  animation: introReveal 0.8s ease forwards;
 }
 
-/* GOD TIER (SSS) - Rainbow Text Permanent */
-.god-tier span {
-    background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; 
-    animation: rainbowTextMove 4s linear infinite; display: inline-block;
+.intro-line:nth-child(1) { animation-delay: 0.3s; }
+
+.intro-line--sub {
+  animation-delay: 0.9s;
+  color: #888;
+  font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+  letter-spacing: 20px;
 }
 
-/* GLITCH TIER (GOATS) - Rainbow Text Permanent + Glitch Hover */
-.glitch-tier {
-    border-color: rgba(255,255,255,0.4);
-    background: rgba(0,0,0,0.8);
-}
-.glitch-tier:hover {
-    animation: glitch-skew 0.2s infinite linear alternate-reverse;
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 20px rgba(255,255,255,0.3);
-}
-/* IMPORTANT : Le texte reste Rainbow TOUT LE TEMPS */
-.glitch-tier span {
-    background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; 
-    animation: rainbowTextMove 2s linear infinite;
-    display: inline-block;
-}
-/* Au survol, on ajoute juste le shadow glitch, on garde le rainbow */
-.glitch-tier:hover span {
-    text-shadow: 3px 0 rgba(255,0,0,0.8), -3px 0 rgba(0,0,255,0.8), 0 0 10px white;
+.intro-bar {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #fff, transparent);
+  margin-top: 10px;
+  animation: introBarGrow 1s 1.6s ease forwards;
 }
 
-/* ELECTRIC TIERS (HAKI) */
-.electric-tier { color: var(--text-color, #fff); background-color: #000; }
-.electric-tier:hover span {
-    color: #000000 !important; 
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-    font-weight: 900;
+@keyframes introReveal  { to { opacity: 1; } }
+@keyframes introBarGrow { to { width: 220px; } }
+@keyframes introFade    { to { opacity: 0; pointer-events: none; } }
+
+
+/* ─────────────────────────────────────────────────────
+   5. THEME TOGGLE
+───────────────────────────────────────────────────── */
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 8000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--speed), box-shadow var(--speed), transform 0.15s;
 }
 
-/* UI Controls */
-.custom-search { background: rgba(255, 255, 255, 0.05); border: 1px solid #333; color: white; padding: 12px 20px; border-radius: 50px; width: 100%; margin-bottom: 20px; }
-.filter-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid #444; color: #888; padding: 6px 14px; border-radius: 20px; cursor: pointer; margin: 2px; }
-.filter-btn.active { color: white; box-shadow: 0 0 10px currentColor; border-color: currentColor; }
-.disclaimer-box { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); margin: 20px auto; max-width: 900px; text-align: left; }
-.custom-tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: #fff; padding: 10px 15px; border-radius: 15px; border: 1px solid #00f3ff; z-index: 9999; pointer-events: none; max-width: 350px; line-height: 1.4; }
+#theme-toggle:hover {
+  border-color: rgba(255,214,0,0.5);
+  box-shadow: 0 0 12px rgba(255,214,0,0.25);
+  transform: rotate(20deg) scale(1.05);
+}
 
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─────────────────────────────────────────────────────
+   6. HEADER & HERO
+───────────────────────────────────────────────────── */
+header {
+  position: relative;
+  padding: 70px 60px 50px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Scanlines only in dark mode */
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.012) 2px,
+    rgba(255,255,255,0.012) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity var(--speed);
+}
+
+[data-theme="light"] header::before { opacity: 0; }
+
+.header-inner { position: relative; z-index: 1; }
+
+/* Creators row */
+.creators {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 50px;
+}
+
+.creator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.creator:nth-child(1) { animation-delay: 2.5s; }
+.creator:nth-child(2) { animation-delay: 2.7s; }
+
+.creator-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  transition: color var(--speed);
+}
+
+/* Title */
+.hero-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0;
+  animation: fadeUp 0.7s 2.9s ease forwards;
+}
+
+.hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -2px;
+  opacity: 0;
+  animation: fadeUp 0.9s 3.1s ease forwards;
+}
+
+.word-yba {
+  display: block;
+  background: linear-gradient(180deg, #ffffff 30%, rgba(255,255,255,0.3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgba(255,255,255,0.12));
+}
+
+[data-theme="light"] .word-yba {
+  background: linear-gradient(180deg, #1a1628 30%, rgba(50,40,80,0.6) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.word-tier {
+  display: block;
+  background: linear-gradient(180deg, #ff2a50 0%, #880018 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(255,30,60,0.3));
+}
+
+.word-list {
+  display: block;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .word-list {
+  background: linear-gradient(180deg, rgba(30,20,60,0.5) 0%, rgba(30,20,60,0.15) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+  letter-spacing: 8px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  opacity: 0;
+  animation: fadeUp 0.7s 3.4s ease forwards;
+}
+
+.h-rule {
+  width: 100%;
+  max-width: 600px;
+  margin: 28px auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--clr-sss) 30%, var(--clr-s) 50%, var(--clr-sss) 70%, transparent);
+  opacity: 0;
+  animation: ruleGrow 0.8s 3.6s ease forwards;
+}
+
+@keyframes ruleGrow { to { opacity: 0.5; } }
+
+.disclaimer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  border: 1px solid rgba(255,214,0,0.15);
+  border-left: 2px solid rgba(255,214,0,0.6);
+  background: rgba(255,214,0,0.03);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.82rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-muted);
+  text-align: left;
+  opacity: 0;
+  animation: fadeUp 0.7s 3.7s ease forwards;
+}
+
+.disclaimer b { color: rgba(255,214,0,0.85); font-weight: 600; }
+
+[data-theme="light"] .disclaimer {
+  border-left-color: rgba(180,120,0,0.7);
+  background: rgba(180,140,0,0.05);
+}
+
+
+/* ─────────────────────────────────────────────────────
+   8. CONTROLS
+───────────────────────────────────────────────────── */
+.controls {
+  padding: 10px 60px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeUp 0.7s 3.9s ease forwards;
+}
+
+.search-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 13px 20px 13px 48px;
+  border-radius: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  outline: none;
+  transition: border-color var(--speed), box-shadow var(--speed);
+}
+
+.search-input::placeholder { color: var(--text-muted); }
+
+.search-input:focus {
+  border-color: rgba(255,0,60,0.5);
+  box-shadow: 0 0 0 3px rgba(255,0,60,0.08);
+}
+
+/* Filter buttons */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.filter-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  padding: 7px 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color var(--speed), border-color var(--speed), box-shadow var(--speed);
+}
+
+.filter-btn .btn-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--fc, #888);
+  opacity: 0;
+  transition: opacity var(--speed);
+}
+
+.filter-btn .btn-label {
+  position: relative;
+  z-index: 1;
+}
+
+.filter-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+
+.filter-btn.on { border-color: var(--fc); box-shadow: 0 0 14px var(--fc); color: #000; }
+.filter-btn.on .btn-fill { opacity: 1; }
+
+
+/* ─────────────────────────────────────────────────────
+   9. TIER ROWS
+───────────────────────────────────────────────────── */
+.tiers {
+  padding: 20px 40px 80px;
+  display: flex;
+  flex-direction: column;
+  /* NO gap — tiers flow continuously, we handle spacing via border-radius on first/last */
+}
+
+/*
+  Each tier has a solid background so we can do smooth colour transitions.
+  We remove border-radius between adjacent rows, keeping it only on top of
+  the first and bottom of the last visible row.
+*/
+.tier-row {
+  display: flex;
+  align-items: stretch;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-top: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+  transition: box-shadow 0.3s;
+  opacity: 0;
+  animation: rowReveal 0.65s ease forwards;
+}
+
+.tier-row:first-child {
+  border-radius: 10px 10px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.tier-row:last-child {
+  border-radius: 0 0 10px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tier-row:only-child {
+  border-radius: 10px;
+}
+
+.tier-row:hover {
+  z-index: 10;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+@keyframes rowReveal {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+
+/* ─────────────────────────────────────────────────────
+   10. TIER LABEL
+───────────────────────────────────────────────────── */
+.tier-label {
+  width: 230px;
+  min-width: 230px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 16px;
+  text-align: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Shimmer sweep on label */
+.tier-label::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -60%;
+  width: 40%;
+  height: 300%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.08) 50%, transparent);
+  animation: labelShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes labelShimmer {
+  0%       { transform: translateX(-100%); }
+  60%, 100% { transform: translateX(500%); }
+}
+
+.tier-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  display: block;
+  position: relative;
+  z-index: 1;
+  color: var(--label-text);
+}
+
+.tier-desc {
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.75;
+  position: relative;
+  z-index: 1;
+  line-height: 1.4;
+  color: var(--label-text);
+}
+
+
+/* ─────────────────────────────────────────────────────
+   11. PLAYER CARDS
+───────────────────────────────────────────────────── */
+.tier-content {
+  flex-grow: 1;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.pcard {
+  position: relative;
+  overflow: hidden;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(0,0,0,0.5);
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, border-color 0.22s ease;
+  white-space: nowrap;
+  user-select: none;
+  will-change: transform;
+  contain: layout style;
+}
+
+[data-theme="light"] .pcard {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.1);
+
+}
+
+.pcard:hover { transform: translateY(-4px) scale(1.06); }
+.pcard:active { transform: translateY(-1px) scale(1.02); transition-duration: 0.08s; }
+
+
+
+.pcard-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  will-change: contents;
+}
+
+/* ── Shimmer traversant au hover ── */
+.pcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255,255,255,0.10) 50%,
+    transparent 65%
+  );
+  background-size: 250% 100%;
+  background-position: 200% center;
+  z-index: 3;
+  pointer-events: none;
+  transition: background-position 0s;
+  border-radius: inherit;
+}
+
+.pcard:hover::before {
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+
+/* ── Glow de bord coloré (utilise la var CSS --rank-color si dispo) ── */
+.pcard::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 7px;
+  background: transparent;
+  border: 1px solid transparent;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.pcard:hover::after { opacity: 1; }
+
+/* ── Keyframe pour le nom qui brille au hover (flash rapide) ── */
+@keyframes nameFlash {
+  0%   { opacity: 1; }
+  40%  { opacity: 0.7; }
+  60%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+.pcard:hover .pname { animation: nameFlash 0.35s ease; }
+
+/* ── Scale du texte subtil ── */
+.pname {
+  display: block;
+  position: relative;
+  z-index: 4;
+  pointer-events: none;
+  transition: letter-spacing 0.2s ease;
+}
+.pcard:hover .pname { letter-spacing: 1.5px; }
+
+
+/* ─────────────────────────────────────────────────────
+   12. RANK-SPECIFIC STYLES
+   Each rank has:
+   - Label background
+   - Badge colour + glow
+   - Row background (for smooth gradient between rows)
+───────────────────────────────────────────────────── */
+
+/* ── GOATS ── */
+.row-GOATS {
+  background: linear-gradient(115deg, #f0ebe0 0%, #c0b89a 16%, #1c1710 52%, #000 100%);
+  border-color: rgba(255,255,255,0.18) !important;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.75);
+}
+
+.row-GOATS .tier-label {
+  background: transparent;
+  border-right-color: rgba(0,0,0,0.3);
+}
+
+.row-GOATS .tier-badge {
+  background: linear-gradient(180deg, #000 0%, #555 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(255,255,255,0.4));
+}
+
+.row-GOATS .tier-desc { color: rgba(0,0,0,0.45); }
+.row-GOATS .tier-content { background: rgba(0,0,0,0.3); }
+
+.row-GOATS .pcard {
+  background: rgba(0,0,0,0.75);
+  border-color: rgba(255,255,255,0.18);
+}
+
+.row-GOATS .pcard:hover {
+  box-shadow: 0 0 26px rgba(255,255,255,0.35), 0 0 60px rgba(255,255,255,0.08), inset 0 0 12px rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.35) !important;
+  animation: none;
+}
+
+.row-GOATS .pname {
+  background: linear-gradient(90deg, #ff003c, #ff9500, #fffb00, #00ffb2, #00d0ff, #9b4fff, #ff003c);
+  background-size: 400% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowFlow 2s linear infinite;
+}
+
+/* ── SSS ── */
+.row-SSS {
+  background: rgba(8,0,22,0.88);
+  border-color: rgba(255,0,60,0.18) !important;
+
+}
+
+.row-SSS .tier-label {
+  background: linear-gradient(175deg, rgba(255,0,60,0.2) 0%, transparent 100%);
+}
+
+.row-SSS .tier-badge {
+  background: linear-gradient(180deg, #ff003c, #ff9500);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: sssGlow 2s ease-in-out infinite;
+}
+
+@keyframes sssGlow {
+  0%,100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+
+.row-SSS .tier-desc { color: rgba(255,100,100,0.65); }
+
+.row-SSS .pcard {
+  background: rgba(30,0,12,0.8);
+  border-color: rgba(255,0,60,0.2);
+}
+
+.row-SSS .pcard:hover { box-shadow: 0 0 20px rgba(255,0,60,0.7), 0 0 50px rgba(255,0,60,0.2), inset 0 0 8px rgba(255,0,60,0.06); border-color: rgba(255,0,60,0.4) !important; }
+
+.row-SSS .pname {
+  background: linear-gradient(90deg, #ff003c, #ff7700, #ffdd00, #ff003c);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowFlow 3s linear infinite;
+}
+
+/* ── SS ── */
+.row-SS { background: rgba(14,0,0,0.85); }
+.row-SS .tier-label { background: linear-gradient(160deg, rgba(200,0,0,0.5), rgba(80,0,0,0.7)); }
+.row-SS .tier-badge { color: #ff1111; text-shadow: 0 0 18px rgba(255,0,0,1), 0 0 40px rgba(255,0,0,0.4); }
+.row-SS .tier-desc  { color: rgba(255,80,80,0.65); }
+.row-SS .pcard:hover { box-shadow: 0 0 20px rgba(255,20,20,0.7), 0 0 45px rgba(255,0,0,0.18), inset 0 0 8px rgba(255,0,0,0.05); border-color: rgba(255,30,30,0.4) !important; }
+
+/* ── S+ ── */
+.row-Splus { background: rgba(14,5,0,0.85); }
+.row-Splus .tier-label { background: linear-gradient(160deg, rgba(200,100,0,0.5), rgba(70,28,0,0.7)); }
+.row-Splus .tier-badge { color: #ff8c00; text-shadow: 0 0 18px rgba(255,140,0,1), 0 0 40px rgba(255,80,0,0.4); }
+.row-Splus .tier-desc  { color: rgba(255,160,50,0.65); }
+.row-Splus .pcard:hover { box-shadow: 0 0 20px rgba(255,140,0,0.7), 0 0 45px rgba(255,100,0,0.18), inset 0 0 8px rgba(255,130,0,0.05); border-color: rgba(255,140,0,0.4) !important; }
+
+/* ── S ── */
+.row-S { background: rgba(12,10,0,0.85); }
+.row-S .tier-label { background: linear-gradient(160deg, rgba(180,150,0,0.45), rgba(55,44,0,0.7)); }
+.row-S .tier-badge { color: #ffd600; text-shadow: 0 0 18px rgba(255,214,0,1), 0 0 40px rgba(255,180,0,0.4); }
+.row-S .tier-desc  { color: rgba(255,220,50,0.65); }
+.row-S .pcard:hover { box-shadow: 0 0 20px rgba(255,214,0,0.7), 0 0 45px rgba(255,180,0,0.18), inset 0 0 8px rgba(255,214,0,0.05); border-color: rgba(255,214,0,0.4) !important; }
+
+/* ── A ── */
+.row-A { background: rgba(8,0,16,0.85); }
+.row-A .tier-label { background: linear-gradient(160deg, rgba(140,50,220,0.45), rgba(30,0,50,0.7)); }
+.row-A .tier-badge { color: #b44fff; text-shadow: 0 0 18px rgba(180,79,255,1), 0 0 40px rgba(130,0,255,0.4); }
+.row-A .tier-desc  { color: rgba(175,90,255,0.65); }
+.row-A .pcard:hover { box-shadow: 0 0 20px rgba(180,60,255,0.7), 0 0 45px rgba(150,0,255,0.18), inset 0 0 8px rgba(180,60,255,0.05); border-color: rgba(180,60,255,0.4) !important; }
+
+/* ── B ── */
+.row-B { background: rgba(0,6,16,0.85); }
+.row-B .tier-label { background: linear-gradient(160deg, rgba(20,100,210,0.45), rgba(0,22,55,0.7)); }
+.row-B .tier-badge { color: #2299ff; text-shadow: 0 0 18px rgba(34,153,255,1), 0 0 40px rgba(0,100,255,0.4); }
+.row-B .tier-desc  { color: rgba(60,160,255,0.65); }
+.row-B .pcard:hover { box-shadow: 0 0 20px rgba(30,140,255,0.7), 0 0 45px rgba(0,100,255,0.18), inset 0 0 8px rgba(30,140,255,0.05); border-color: rgba(30,140,255,0.4) !important; }
+
+/* ── C ── */
+.row-C { background: rgba(0,10,5,0.85); }
+.row-C .tier-label { background: linear-gradient(160deg, rgba(0,160,90,0.4), rgba(0,33,15,0.7)); }
+.row-C .tier-badge { color: #00d97e; text-shadow: 0 0 18px rgba(0,217,126,1), 0 0 40px rgba(0,200,100,0.4); }
+.row-C .tier-desc  { color: rgba(0,200,100,0.65); }
+.row-C .pcard:hover { box-shadow: 0 0 20px rgba(0,200,100,0.7), 0 0 45px rgba(0,180,80,0.18), inset 0 0 8px rgba(0,200,100,0.05); border-color: rgba(0,200,100,0.4) !important; }
+
+
+/* ── Shimmer couleur par tier ── */
+.row-SSS .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(255,0,60,0.18) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-SS .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(255,30,30,0.15) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-Splus .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(255,140,0,0.15) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-S .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(255,214,0,0.15) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-A .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(180,60,255,0.15) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-B .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(30,140,255,0.15) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-C .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(0,200,100,0.15) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+.row-GOATS .pcard:hover::before {
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.14) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: -60% center;
+  transition: background-position 0.5s ease;
+}
+
+/* Light mode adjustments — keep backgrounds readable */
+[data-theme="light"] .row-GOATS { background: linear-gradient(115deg, #ddd8cc 0%, #aaa28e 16%, #55503e 52%, #333 100%); }
+[data-theme="light"] .row-SSS   { background: rgba(255,220,225,0.96); }
+[data-theme="light"] .row-SS    { background: rgba(255,230,230,0.9); }
+[data-theme="light"] .row-Splus { background: rgba(255,240,220,0.9); }
+[data-theme="light"] .row-S     { background: rgba(255,248,210,0.9); }
+[data-theme="light"] .row-A     { background: rgba(240,225,255,0.9); }
+[data-theme="light"] .row-B     { background: rgba(218,234,255,0.9); }
+[data-theme="light"] .row-C     { background: rgba(215,255,235,0.9); }
+
+
+/* ─────────────────────────────────────────────────────
+   13. SEPARATOR — large, visible
+───────────────────────────────────────────────────── */
+.sep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: sepPulse 3s ease-in-out infinite;
+  will-change: opacity;
+}
+
+[data-theme="light"] .sep {
+  color: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.1);
+}
+
+@keyframes sepPulse {
+  0%,100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.08); }
+}
+
+
+/* ─────────────────────────────────────────────────────
+   14. TOOLTIP
+───────────────────────────────────────────────────── */
+#tooltip {
+  position: fixed;
+  z-index: 9997;
+  pointer-events: none;
+  max-width: 295px;
+  background: rgba(5,4,18,0.97);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  font-size: 0.86rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(232,227,245,0.78);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.9);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+#tooltip.vis { opacity: 1; }
+
+#tooltip-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  display: block;
+  text-transform: uppercase;
+}
+
+[data-theme="light"] #tooltip {
+  background: rgba(250,248,255,0.97);
+  color: rgba(30,20,60,0.8);
+  border-color: rgba(0,0,0,0.08);
+}
+
+
+/* ─────────────────────────────────────────────────────
+   15. LOADING
+───────────────────────────────────────────────────── */
+#app-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+#app-loading.hide { opacity: 0; pointer-events: none; }
+
+.loading-ring {
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255,255,255,0.05);
+  border-top-color: #ff003c;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-txt {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 8px;
+  color: var(--text-muted);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* ─────────────────────────────────────────────────────
+   16. FOOTER
+───────────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 30px 20px 60px;
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 200px;
+  margin: 0 auto 24px;
+  background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
+}
+
+.credits {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.credits .cr { color: #ff003c; }
+.credits .cb { color: #2299ff; }
+
+
+/* ─────────────────────────────────────────────────────
+   17. ANIMATION KEYFRAMES
+───────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rainbowFlow {
+  to { background-position: -300% center; }
+}
+
+@keyframes glitchHover {
+  0%   { transform: translateY(-3px) scale(1.05) skewX(0deg); }
+  25%  { transform: translateY(-3px) scale(1.05) skewX(-1.5deg); }
+  50%  { transform: translateY(-3px) scale(1.05) skewX(1.5deg); }
+  75%  { transform: translateY(-3px) scale(1.05) skewX(-0.8deg); }
+  100% { transform: translateY(-3px) scale(1.05) skewX(0.5deg); }
+}
+
+/* Rank label animated glow — pulsing border */
+@keyframes rankGlowPulse {
+  0%, 100% { box-shadow: inset 0 0 20px rgba(255,255,255,0.02); }
+  50%       { box-shadow: inset 0 0 30px rgba(255,255,255,0.06); }
+}
+
+
+/* ─────────────────────────────────────────────────────
+   18. RESPONSIVE
+───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  header       { padding: 50px 20px 30px; }
+  .creators    { gap: 30px; }
+  .lr-card     { width: 90px; height: 90px; }
+  .controls    { padding: 10px 16px 24px; }
+  .tiers       { padding: 10px 10px 60px; }
+  .tier-label  { width: 110px; min-width: 110px; padding: 14px 6px; }
+  .tier-badge  { font-size: 1.5rem; }
+  .tier-desc   { display: none; }
+  .pcard       { font-size: 0.88rem; padding: 7px 12px; }
+  .sep         { width: 28px; height: 28px; font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-title  { letter-spacing: -1px; }
+  .tier-label  { width: 70px; min-width: 70px; }
+  .tier-badge  { font-size: 1.1rem; }
+}
+
+
+/* ─────────────────────────────────────────────────────
+   19. SCROLLBAR
+───────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--sb-thumb); border-radius: 4px; }
+
+
+/* ─────────────────────────────────────────────────────
+   7. CREATOR PROFILE CARDS (clean, élégant, sobre)
+   Concept : carte verticale avec photo centrée,
+   fine bordure colorée animée discrète,
+   effet de lumière ambiante au hover.
+───────────────────────────────────────────────────── */
+
+.creators {
+  display: flex;
+  justify-content: center;
+  gap: 56px;
+  margin-bottom: 52px;
+  overflow: visible;
+}
+
+.creator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards;
+}
+.creator:nth-child(1) { animation-delay: 2.5s; }
+.creator:nth-child(2) { animation-delay: 2.7s; }
+
+/* ── La carte elle-même ── */
+.profile-card {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  cursor: default;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-card:hover {
+  transform: translateY(-6px);
+}
+
+/* Photo */
+.profile-img {
+  position: absolute;
+  inset: 4px;
+  border-radius: 16px;
+  object-fit: cover;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  z-index: 2;
+  display: block;
+  /* légère désaturation par défaut */
+  filter: saturate(0.85) brightness(0.92);
+  transition: filter 0.5s ease;
+}
+
+.profile-card:hover .profile-img {
+  filter: saturate(1.1) brightness(1.05);
+}
+
+/* Cadre extérieur — fine ligne animée */
+.profile-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255,80,80,0.8),
+    rgba(255,200,50,0.6),
+    rgba(255,80,80,0.2),
+    rgba(255,200,50,0.6),
+    rgba(255,80,80,0.8)
+  );
+  animation: profileBorderSpin 6s linear infinite;
+  z-index: 1;
+}
+
+/* Masque intérieur pour ne laisser que le bord */
+.profile-border::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 18px;
+  background: var(--bg);
+  transition: background var(--speed);
+}
+
+@keyframes profileBorderSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Lueur ambiante derrière la carte — visible au hover seulement */
+.profile-glow {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255,100,50,0.18) 0%,
+    rgba(255,180,50,0.08) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.profile-card:hover .profile-glow {
+  opacity: 1;
+}
+
+/* Reflet léger sur la photo au hover */
+.profile-sheen {
+  position: absolute;
+  inset: 4px;
+  border-radius: 16px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.10) 0%,
+    transparent 50%,
+    rgba(255,255,255,0.04) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.profile-card:hover .profile-sheen {
+  opacity: 1;
+}
+
+/* Nom du créateur */
+.creator-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  transition: color var(--speed), letter-spacing 0.4s ease;
+}
+
+.creator:hover .creator-name {
+  color: rgba(255,180,50,0.8);
+  letter-spacing: 7px;
+}
+
+
+/* ─────────────────────────────────────────────────────
+   7b. SHAYRAIM SPECIAL CARD (rank S — aura bleue)
+   Quand on survole le nom "Shayraim" dans la tier list,
+   l'aura prend une couleur bleue électrique distinctive.
+───────────────────────────────────────────────────── */
+
+/* La carte Shayraim a une pulsation subtile en permanence */
+.profile-card--shayraim .profile-border {
+  background: conic-gradient(
+    from 0deg,
+    rgba(34,153,255,0.9),
+    rgba(180,79,255,0.5),
+    rgba(34,153,255,0.2),
+    rgba(0,200,255,0.6),
+    rgba(34,153,255,0.9)
+  );
+}
+
+.profile-card--shayraim .profile-glow {
+  background: radial-gradient(
+    circle,
+    rgba(34,153,255,0.2) 0%,
+    rgba(0,200,255,0.1) 45%,
+    transparent 70%
+  );
+}
+
+.profile-card--shayraim:hover .profile-glow { opacity: 1; }
+
+/* Aura étendue sur hover — cercles électriques */
+.profile-card--shayraim::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1px solid rgba(34,153,255,0.0);
+  transition: border-color 0.5s ease, inset 0.5s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.profile-card--shayraim:hover::after {
+  border-color: rgba(34,153,255,0.35);
+  box-shadow:
+    0 0 20px rgba(34,153,255,0.2),
+    inset 0 0 20px rgba(34,153,255,0.1);
+}
+
+/* ─────────────────────────────────────────────────────
+   7c. SHAYRAIM — AURA SPÉCIALE dans la tier list
+   La carte joueur "Shayraim" a une aura bleue/violette
+   distincte des autres cartes S (qui sont jaune).
+───────────────────────────────────────────────────── */
+
+/* Remplace la couleur jaune du rank S par bleu/violet */
+.pcard--shayraim {
+  color: #e8e8e8 !important;
+  border-color: rgba(200,200,200,0.18) !important;
+  background: rgba(0,0,0,0.7) !important;
+}
+
+.pcard--shayraim .pname {
+  background: linear-gradient(90deg, #ffffff, #aaaaaa, #ffffff, #cccccc, #ffffff);
+  background-size: 400% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shayAura 3.5s linear infinite;
+}
+
+@keyframes shayAura {
+  to { background-position: -400% center; }
+}
+
+.pcard--shayraim:hover {
+  box-shadow:
+    0 0 20px rgba(255,255,255,0.35),
+    0 0 45px rgba(180,180,180,0.15),
+    inset 0 0 12px rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+  transform: translateY(-4px) scale(1.07);
+}
+
+.pcard--shayraim .pcard-canvas {
+  opacity: 1;
+}
+
+
+/* ─────────────────────────────────────────────────────
+   DÉCORATIONS — côtés de la page, ornements header
+───────────────────────────────────────────────────── */
+
+/* Runes dans les coins du header */
+.deco-rune {
+  position: absolute;
+  font-size: 1.1rem;
+  color: rgba(255,180,50,0.25);
+  animation: runePulse 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+  top: 24px;
+}
+.deco-rune--tl { left:  44px; animation-delay: 0s; }
+.deco-rune--tr { right: 44px; animation-delay: 2s; }
+
+@keyframes runePulse {
+  0%, 100% { opacity: 0.2; transform: rotate(0deg)   scale(1); }
+  50%       { opacity: 0.5; transform: rotate(10deg) scale(1.15); }
+}
+
+/* Divider header avec diamant */
+.header-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 380px;
+  margin: 0 auto 26px;
+  opacity: 0;
+  animation: fadeUp 0.7s 2.3s ease forwards;
+}
+
+.hdiv-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,180,50,0.45));
+}
+.header-divider .hdiv-line:last-child {
+  background: linear-gradient(90deg, rgba(255,180,50,0.45), transparent);
+}
+
+.hdiv-diamond {
+  font-size: 0.65rem;
+  color: rgba(255,180,50,0.6);
+  animation: runePulse 3s ease-in-out infinite;
+}
+
+/* Barres latérales fixes */
+.side-deco {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+  opacity: 0;
+  animation: fadeUp 1s 4.2s ease forwards;
+  pointer-events: none;
+}
+.side-deco--left  { left:  14px; }
+.side-deco--right { right: 14px; }
+
+.sdeco-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.42rem;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+  writing-mode: vertical-lr;
+}
+
+.sdeco-bar {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(180deg, transparent, rgba(255,180,50,0.35), transparent);
+}
+
+.sdeco-dots { display: flex; flex-direction: column; gap: 7px; }
+
+.sdeco-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  animation: dotPulse 3s ease-in-out infinite;
+}
+.sdeco-dot--GOATS { background:#fff;    animation-delay:0s; }
+.sdeco-dot--SSS   { background:#ff003c; animation-delay:.2s; }
+.sdeco-dot--SS    { background:#ff2020; animation-delay:.4s; }
+.sdeco-dot--Sp    { background:#ff8c00; animation-delay:.6s; }
+.sdeco-dot--S     { background:#ffd600; animation-delay:.8s; }
+.sdeco-dot--A     { background:#b44fff; animation-delay:1s; }
+.sdeco-dot--B     { background:#2299ff; animation-delay:1.2s; }
+.sdeco-dot--C     { background:#00d97e; animation-delay:1.4s; }
+
+@keyframes dotPulse {
+  0%,100% { opacity:.35; transform:scale(1); }
+  50%     { opacity:1;   transform:scale(1.4); }
+}
+
+.sdeco-sigil {
+  font-size: 1.2rem;
+  color: rgba(255,180,50,0.2);
+  animation: sigilSpin 10s linear infinite;
+}
+.sdeco-sigil--sm {
+  font-size:.8rem;
+  animation-duration:15s;
+  animation-direction:reverse;
+  color:rgba(255,60,30,.15);
+}
+@keyframes sigilSpin { to { transform:rotate(360deg); } }
+
+/* Footer ornements */
+.footer-ornament {
+  display: flex; align-items: center; gap: 12px;
+  max-width: 280px; margin: 0 auto 18px;
+}
+.footer-ornament .hdiv-line {
+  background: linear-gradient(90deg, transparent, rgba(255,180,50,0.25));
+}
+.footer-ornament .hdiv-line:last-child {
+  background: linear-gradient(90deg, rgba(255,180,50,0.25), transparent);
+}
+.footer-sub {
+  font-family:'Cinzel',serif;
+  font-size:.5rem; letter-spacing:5px;
+  color:var(--text-muted); margin-top:8px;
+  text-transform:uppercase; opacity:.5;
+}
+
+@media (max-width: 1100px) {
+  .side-deco { display: none; }
+  .deco-rune { display: none; }
+}
+@media (max-width: 900px) {
+  .creators  { gap: 28px; }
+  .profile-card { width: 78px; height: 78px; }
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   ★ ENHANCED ADDITIONS — Spotlight, Stats, Scroll, Toast
+   ═══════════════════════════════════════════════════════ */
+
+/* ── SPOTLIGHT MODAL ── */
+#spotlight-overlay {
+  position: fixed; inset: 0; z-index: 8000;
+  background: rgba(2, 1, 15, 0.88);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+}
+#spotlight-overlay.open { opacity: 1; pointer-events: all; }
+
+.spotlight-card {
+  position: relative; width: min(520px, 90vw);
+  background: linear-gradient(145deg, rgba(18,14,40,0.97) 0%, rgba(8,6,20,0.99) 100%);
+  border-radius: 16px; border: 1px solid rgba(255,255,255,0.09);
+  padding: 44px 40px 36px;
+  transform: scale(0.88) translateY(24px);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+  opacity: 0; overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05);
+}
+#spotlight-overlay.open .spotlight-card { transform: scale(1) translateY(0); opacity: 1; }
+
+.spotlight-bg-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border-radius: 16px; pointer-events: none; z-index: 0;
+}
+.spotlight-content { position: relative; z-index: 2; }
+
+.spotlight-rank-badge {
+  font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 6px;
+  text-transform: uppercase; opacity: 0.6; margin-bottom: 10px; display: block;
+}
+.spotlight-name {
+  font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 900; line-height: 1; margin-bottom: 6px; display: block;
+}
+.spotlight-rank-desc {
+  font-size: 0.68rem; letter-spacing: 2.5px; text-transform: uppercase;
+  opacity: 0.45; margin-bottom: 28px; display: block;
+}
+.spotlight-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  margin-bottom: 24px;
+}
+.spotlight-lore {
+  font-size: 1rem; font-weight: 300; line-height: 1.75;
+  color: rgba(232, 227, 245, 0.82); margin-bottom: 28px;
+  font-style: italic; letter-spacing: 0.2px;
+}
+.spotlight-no-lore {
+  font-size: 0.82rem; opacity: 0.3; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 28px;
+}
+
+/* Stats bars */
+.spotlight-stats { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.stat-row { display: flex; align-items: center; gap: 12px; }
+.stat-label {
+  font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase;
+  opacity: 0.5; width: 80px; flex-shrink: 0;
+}
+.stat-bar-bg {
+  flex: 1; height: 4px; background: rgba(255,255,255,0.07);
+  border-radius: 4px; overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%; border-radius: 4px; width: 0%;
+  transition: width 1.2s cubic-bezier(0.25,1,0.5,1);
+}
+.stat-val {
+  font-family: 'Cinzel', serif; font-size: 0.72rem; opacity: 0.6;
+  width: 32px; text-align: right; flex-shrink: 0;
+}
+
+.spotlight-position {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.45;
+}
+.spotlight-close {
+  position: absolute; top: 16px; right: 16px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px; width: 32px; height: 32px; cursor: pointer;
+  color: rgba(255,255,255,0.5); font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; z-index: 10;
+}
+.spotlight-close:hover { background: rgba(255,60,60,0.15); border-color: rgba(255,60,60,0.3); color: #fff; }
+
+/* ── TIER COUNTER BADGE ── */
+.tier-count-badge {
+  position: absolute; top: 8px; right: 10px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 0.55rem;
+  font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  opacity: 0; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 20px;
+  padding: 2px 9px; color: var(--text-muted);
+  transition: opacity 0.3s; pointer-events: none; z-index: 5;
+}
+.tier-row:hover .tier-count-badge { opacity: 1; }
+
+/* ── SCROLL REVEAL ── */
+.tier-row {
+  opacity: 0;
+  transform: translateY(20px) translateX(-8px);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: none !important;
+}
+.tier-row.revealed { opacity: 1; transform: translateY(0) translateX(0); }
+
+/* ── WELCOME TOAST ── */
+#welcome-toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  z-index: 7000; background: rgba(14, 11, 32, 0.95);
+  border: 1px solid rgba(255,180,50,0.2); border-radius: 10px;
+  padding: 12px 24px; display: flex; align-items: center; gap: 12px;
+  font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(232, 227, 245, 0.7); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  opacity: 0; pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+  white-space: nowrap;
+}
+#welcome-toast .toast-icon { font-size: 1rem; animation: toastPulse 1.5s ease-in-out infinite; }
+#welcome-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@keyframes toastPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+/* ── HALL OF FAME (GOATS row) ── */
+.row-GOATS {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,215,0,0.04) 50%, rgba(255,255,255,0.02) 100%);
+}
+.tier-badge-crown {
+  display: block; font-size: 1.1rem; line-height: 1; margin-bottom: 2px;
+  animation: crownFloat 3s ease-in-out infinite;
+}
+@keyframes crownFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%       { transform: translateY(-3px) rotate(3deg); }
+}
+
+/* ── GLOBAL STATS BAR ── */
+#global-stats {
+  max-width: 900px; margin: 0 auto 20px; padding: 0 24px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; flex-wrap: wrap; opacity: 0;
+  animation: fadeUp 0.7s 4.5s ease forwards;
+}
+.gstat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.gstat-val {
+  font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900;
+  line-height: 1; color: rgba(255,180,50,0.9); transition: transform 0.2s;
+}
+.gstat:hover .gstat-val { transform: scale(1.15); }
+.gstat-label { font-size: 0.48rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.4; }
+.gstat-sep { width: 1px; height: 32px; background: rgba(255,255,255,0.08); }
+
+/* ── PCARD POSITION ── */
+.pcard-pos {
+  position: absolute; top: 2px; left: 4px; font-size: 0.42rem;
+  letter-spacing: 1px; opacity: 0.2; z-index: 5; pointer-events: none;
+  font-family: 'Cinzel', serif;
+}
+.pname-year { font-size: 0.65em; opacity: 0.45; font-weight: 400; letter-spacing: 0; }
+
+/* ── HINT PULSE ── */
+@keyframes hintPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,180,50,0.35); }
+  70%  { box-shadow: 0 0 0 8px rgba(255,180,50,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,180,50,0); }
+}
+.pcard.hint-pulse { animation: hintPulse 1s ease 2; }
+
+@media (max-width: 600px) {
+  .spotlight-card { padding: 32px 24px 28px; }
+  .spotlight-name { font-size: 1.6rem; }
+  #global-stats { gap: 14px; }
+  .gstat-val { font-size: 1.1rem; }
+}
