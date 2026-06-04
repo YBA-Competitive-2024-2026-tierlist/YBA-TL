@@ -762,7 +762,7 @@ function App() {
             <div className="creator">
               <ProfileCard src="image/3b0df852d0aa8a5769ae0d3606beff83.webp" name="HavoxHavoc" />
               <span className="creator-name">HavoxHavoc</span>
-              <span className="creator-name">Creator</span>
+              <span className="creator-name">Creator / owner</span>
             </div>
           </div>
           <div className="header-divider" aria-hidden="true">
