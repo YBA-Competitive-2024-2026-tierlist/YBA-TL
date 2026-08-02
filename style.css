@@ -1400,7 +1400,9 @@ footer::before {
   border-radius: 50%;
   animation: dotPulse 3s ease-in-out infinite;
 }
-.sdeco-dot--GOATS { background:#fff;    animation-delay:0s; }
+.sdeco-dot--GOAT { background:#e8c840; animation-delay:0s; }
+.sdeco-dot--OAA  { background:#aaaaff; animation-delay:.0s; }
+.sdeco-dot--Z    { background:#ff4400; animation-delay:.1s; }
 .sdeco-dot--SSS   { background:#ff003c; animation-delay:.2s; }
 .sdeco-dot--SS    { background:#ff2020; animation-delay:.4s; }
 .sdeco-dot--Sp    { background:#ff8c00; animation-delay:.6s; }
@@ -1636,4 +1638,115 @@ footer::before {
   .spotlight-name { font-size: 1.6rem; }
   #global-stats { gap: 14px; }
   .gstat-val { font-size: 1.1rem; }
+}
+
+/* ── ONE ABOVE ALL ── */
+.row-OneAboveAll {
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 60%) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  box-shadow: 0 0 60px rgba(255,255,255,0.08), inset 0 0 80px rgba(0,0,0,0.9) !important;
+  position: relative;
+}
+.row-OneAboveAll::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(255,255,255,0.03) 30%,
+    rgba(255,255,255,0.06) 50%,
+    rgba(255,255,255,0.03) 70%, transparent 100%);
+  pointer-events: none;
+  animation: oaaSheen 4s ease-in-out infinite;
+}
+@keyframes oaaSheen {
+  0%,100% { opacity:0; }
+  50%      { opacity:1; }
+}
+.row-OneAboveAll .tier-label {
+  background: transparent;
+  border-right-color: rgba(255,255,255,0.1);
+}
+.row-OneAboveAll .tier-badge {
+  background: linear-gradient(180deg, #ffffff 0%, #aaaaff 40%, #ffffff 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  font-size: 2.8rem;
+  animation: oaaPulse 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(200,200,255,0.8));
+}
+@keyframes oaaPulse {
+  0%,100% { filter: drop-shadow(0 0 15px rgba(200,200,255,0.6)); }
+  50%      { filter: drop-shadow(0 0 35px rgba(255,255,255,1)); }
+}
+.row-OneAboveAll .tier-desc { color: rgba(200,200,255,0.6); }
+.row-OneAboveAll .tier-content { background: rgba(0,0,0,0.4); }
+.row-OneAboveAll .pcard {
+  background: rgba(10,10,30,0.8);
+  border-color: rgba(200,200,255,0.25);
+}
+.row-OneAboveAll .pcard:hover {
+  box-shadow: 0 0 30px rgba(200,200,255,0.4), 0 0 60px rgba(255,255,255,0.1);
+  animation: glitchHover 0.12s infinite linear;
+}
+.row-OneAboveAll .pname {
+  background: linear-gradient(90deg, #fff, #aaf, #fff8c0, #aaf, #fff);
+  background-size: 300% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: rainbowFlow 2s linear infinite;
+  font-size: 1.05rem;
+}
+
+/* ── GOAT ── */
+.row-GOAT {
+  background: linear-gradient(115deg, #f5e8c0 0%, #c8a840 15%, #1a1200 55%, #000 100%) !important;
+  border-color: rgba(200,168,60,0.3) !important;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
+}
+.row-GOAT .tier-label {
+  background: transparent;
+  border-right-color: rgba(180,140,0,0.2);
+}
+.row-GOAT .tier-badge {
+  background: linear-gradient(180deg, #fff8c0 0%, #c8a840 50%, #8a6010 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(255,220,80,0.4));
+  animation: badgePulse 3s ease-in-out infinite;
+}
+.row-GOAT .tier-desc { color: rgba(0,0,0,0.45); }
+.row-GOAT .tier-content { background: rgba(0,0,0,0.3); }
+.row-GOAT .pcard { background: rgba(0,0,0,0.75); border-color: rgba(200,168,60,0.25); }
+.row-GOAT .pcard:hover { box-shadow: 0 0 22px rgba(255,220,80,0.3); animation: glitchHover 0.14s infinite; }
+.row-GOAT .pname {
+  background: linear-gradient(90deg, #ffd700, #fffbe0, #c8a840, #fff8c0, #ffd700);
+  background-size: 300% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: rainbowFlow 2.5s linear infinite;
+}
+
+/* ── Z TIER ── */
+.row-Z {
+  background: rgba(10,3,0,0.9) !important;
+  border-color: rgba(255,80,0,0.2) !important;
+}
+.row-Z .tier-label {
+  background: linear-gradient(160deg, rgba(255,60,0,0.3) 0%, rgba(60,10,0,0.7) 100%);
+}
+.row-Z .tier-badge {
+  background: linear-gradient(180deg, #ff6600 0%, #ff2200 50%, #990000 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(255,80,0,0.9));
+  animation: zGlow 2s ease-in-out infinite;
+  font-size: 2.6rem;
+}
+@keyframes zGlow {
+  0%,100% { filter: drop-shadow(0 0 10px rgba(255,80,0,0.8)); }
+  50%      { filter: drop-shadow(0 0 25px rgba(255,120,0,1)); }
+}
+.row-Z .tier-desc { color: rgba(255,100,50,0.65); }
+.row-Z .pcard { background: rgba(20,5,0,0.8); border-color: rgba(255,60,0,0.2); }
+.row-Z .pcard:hover { box-shadow: 0 0 18px rgba(255,80,0,0.5); }
+.row-Z .pname {
+  background: linear-gradient(90deg, #ff4400, #ff9900, #ffdd00, #ff6600, #ff4400);
+  background-size: 300% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: rainbowFlow 2.5s linear infinite;
 }
