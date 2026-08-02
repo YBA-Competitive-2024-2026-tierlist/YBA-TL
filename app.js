@@ -426,7 +426,7 @@ function App() {
             React.createElement('span', { className: 'creator-name' }, 'Shayraim')
           ),
           React.createElement('div', { className: 'creator' },
-            React.createElement(ProfileCard, { src: 'image/10xkk9s.jpg', name: 'Havoconslaught' }),
+            React.createElement(ProfileCard, { src: 'image/b664188f61102fcf384c35504edd570c.jpg', name: 'Havoconslaught' }),
             React.createElement('span', { className: 'creator-name' }, 'Havoconslaught')
           )
         ),
