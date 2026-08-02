@@ -10,51 +10,51 @@
 </head>
 <body>
 
-  <!-- ── INTRO CINEMATIC ── -->
   <div id="intro" aria-hidden="true">
     <p class="intro-line">YBA LEGENDS</p>
     <p class="intro-line intro-line--sub">TIERLIST 2024 – 2026</p>
     <div class="intro-bar"></div>
   </div>
 
-  <!-- ── BACKGROUND ── -->
   <div id="bg" aria-hidden="true">
     <canvas id="bg-canvas"></canvas>
     <div class="bg-grad"></div>
   </div>
 
-  <!-- ── THEME TOGGLE ── -->
   <button id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
     <span id="theme-icon">☀️</span>
   </button>
 
-  <!-- ── LOADING ── -->
   <div id="app-loading" role="status" aria-live="polite">
     <div class="loading-ring"></div>
     <p class="loading-txt">LOADING</p>
   </div>
 
-  <!-- ── TOOLTIP ── -->
   <div id="tooltip" role="tooltip" aria-hidden="true">
     <span id="tooltip-name"></span>
     <span id="tooltip-text"></span>
   </div>
 
-  <!-- ── REACT ROOT ── -->
   <div id="root"></div>
 
-  <!-- ── LIBS ── -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!-- Production React — fast, no dev overhead -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
-  <!-- ── VANILLA JS (background + intro + theme) ── -->
+  <!-- Safety net -->
+  <script>
+    window.onerror = function(msg, src, line) {
+      console.error('[YBA]', msg, src, line);
+      var l = document.getElementById('app-loading');
+      if (l) l.querySelector('.loading-txt').textContent = 'ERROR — see F12 console';
+    };
+  </script>
+
   <script src="vanilla.js"></script>
-
-  <!-- ── REACT APP ── -->
-  <script type="text/babel" src="app.js"></script>
-
-  
+  <!-- Pure React.createElement — no JSX, no Babel, loads instantly -->
+  <script src="app.js"></script>
+  <!-- Psst... __ybaEggs.hint() in console -->
+  <script src="easter.js" defer></script>
 
 </body>
 </html>
