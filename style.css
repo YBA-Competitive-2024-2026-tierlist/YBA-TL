@@ -1750,3 +1750,31 @@ footer::before {
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   animation: rainbowFlow 2.5s linear infinite;
 }
+
+/* ─────────────────────────────────────────────────────
+   AQUALICZ — Custom pink card (Z tier)
+───────────────────────────────────────────────────── */
+.pcard--aqualicz {
+  border-color: rgba(255, 105, 180, 0.35) !important;
+  background: rgba(30, 0, 20, 0.75) !important;
+}
+
+.pcard--aqualicz .pname {
+  background: linear-gradient(90deg, #ff69b4, #ff1493, #ffb6d9, #ff69b4);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aqualiczAura 3s linear infinite;
+}
+
+@keyframes aqualiczAura {
+  to { background-position: -300% center; }
+}
+
+.pcard--aqualicz:hover {
+  box-shadow:
+    0 0 16px rgba(255, 105, 180, 0.7),
+    0 0 40px rgba(255, 20, 147, 0.3) !important;
+  transform: translateY(-3px) scale(1.06) !important;
+}
