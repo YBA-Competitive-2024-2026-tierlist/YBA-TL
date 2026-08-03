@@ -82,6 +82,7 @@ const PLAYER_LORE = {
   'sigmaoriol':   'A relentless competitor whose Z-tier placement speaks for itself.',
   'Digger':       'Active through the harshest era, 2025–2026. The bar for the strongest Sp title. Unkillable.',
   'Shayraim':     'Co-creator of this tierlist. A respected S+ competitor. Recognizable by a distinct blue aura.',
+  'Aqualicz':     'A Z-tier force with a signature style all their own. The rose says it all.',
   'ParagonFr':    'S-tier consistency. A name that speaks for itself in the current era.',
   'Dimka':        'Relentless pressure and high fight IQ.',
 };
@@ -276,6 +277,7 @@ function PlayerCard({ name, cfg, rank }) {
   const isZ           = rank === 'Z';
   const isSSS         = rank === 'SSS';
   const isShayraim    = name === 'Shayraim';
+  const isAqualicz    = name === 'Aqualicz';
   // Electric lightning for SS / S+ / S
   const isElectric    = !isOneAboveAll && !isGOAT && !isZ && !isSSS && !isShayraim;
   const cardStyle     = isElectric ? { color: cfg.c1 } : {};
@@ -294,9 +296,9 @@ function PlayerCard({ name, cfg, rank }) {
     if (!lore) return;
     const tip = document.getElementById('tooltip');
     document.getElementById('tooltip-name').textContent = name;
-    document.getElementById('tooltip-name').style.color = isShayraim ? '#40c8ff' : cfg.tip;
+    document.getElementById('tooltip-name').style.color = isShayraim ? '#40c8ff' : isAqualicz ? '#ff69b4' : cfg.tip;
     document.getElementById('tooltip-text').textContent = lore;
-    tip.style.borderLeftColor = isShayraim ? '#2299ff' : cfg.tip;
+    tip.style.borderLeftColor = isShayraim ? '#2299ff' : isAqualicz ? '#ff69b4' : cfg.tip;
     tip.setAttribute('aria-hidden', 'false');
     tip.classList.add('vis');
   };
@@ -317,7 +319,7 @@ function PlayerCard({ name, cfg, rank }) {
 
   return React.createElement('div', {
     ref: cardRef,
-    className: `pcard${isShayraim ? ' pcard--shayraim' : ''}`,
+    className: `pcard${isShayraim ? ' pcard--shayraim' : ''}${isAqualicz ? ' pcard--aqualicz' : ''}`,
     style: cardStyle,
     onMouseEnter: showTip,
     onMouseMove: (e) => { moveTip(e); handleMouseMove(e); },
@@ -328,8 +330,9 @@ function PlayerCard({ name, cfg, rank }) {
   },
     React.createElement('span', { className: 'pname' }, name),
     isShayraim  && React.createElement(ShayraimeAura, { active: hov }),
-    isElectric  && React.createElement(LightningCanvas, { active: hov, col1: cfg.c1, col2: cfg.c2 }),
-    clicked     && React.createElement(ParticleBurst, { trigger: clicked, color: isShayraim ? '#40c8ff' : cfg.tip })
+    isAqualicz  && React.createElement(LightningCanvas, { active: hov, col1: '#ff69b4', col2: '#ff1493' }),
+    !isAqualicz && isElectric && React.createElement(LightningCanvas, { active: hov, col1: cfg.c1, col2: cfg.c2 }),
+    clicked     && React.createElement(ParticleBurst, { trigger: clicked, color: isShayraim ? '#40c8ff' : isAqualicz ? '#ff69b4' : cfg.tip })
   );
 }
 
@@ -426,8 +429,8 @@ function App() {
             React.createElement('span', { className: 'creator-name' }, 'Shayraim')
           ),
           React.createElement('div', { className: 'creator' },
-            React.createElement(ProfileCard, { src: 'image/b664188f61102fcf384c35504edd570c.jpg', name: 'NecroticHollow' }),
-            React.createElement('span', { className: 'creator-name' }, 'NecroticHollow')
+            React.createElement(ProfileCard, { src: 'image/10xkk9s.jpg', name: 'Havoconslaught' }),
+            React.createElement('span', { className: 'creator-name' }, 'Havoconslaught')
           )
         ),
 
